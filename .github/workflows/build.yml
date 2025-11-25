@@ -114,10 +114,35 @@ jobs:
 
       - name: Create Release
         run: |
-          gh release create "${{ steps.tag.outputs.TAG_NAME }}" \
-            --title "Release ${{ steps.tag.outputs.TAG_NAME }}" \
-            --notes "Automated release for ${{ steps.tag.outputs.TAG_NAME }}" \
-            artifacts/**/*
-        env:
-          GH_TOKEN: ${{ github.token }}
+          # Create release using GitHub API
+          RELEASE_RESPONSE=$(curl -s -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/releases \
+            -d "{\"tag_name\":\"${{ steps.tag.outputs.TAG_NAME }}\",\"name\":\"Release ${{ steps.tag.outputs.TAG_NAME }}\",\"body\":\"Automated release for ${{ steps.tag.outputs.TAG_NAME }}\"}")
+          
+          echo "Release response: $RELEASE_RESPONSE"
+          
+          UPLOAD_URL=$(echo $RELEASE_RESPONSE | jq -r '.upload_url' | sed 's/{?name,label}//')
+          
+          if [ -z "$UPLOAD_URL" ] || [ "$UPLOAD_URL" = "null" ]; then
+            echo "Error: Failed to create release or get upload URL"
+            echo "Response: $RELEASE_RESPONSE"
+            exit 1
+          fi
+          
+          echo "Upload URL: $UPLOAD_URL"
+          
+          # Upload artifacts
+          find artifacts -type f | while read file; do
+            filename=$(basename "$file")
+            echo "Uploading $file as $filename"
+            curl -s -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ github.token }}" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary "@$file" \
+              "$UPLOAD_URL?name=$filename"
+          done
 
