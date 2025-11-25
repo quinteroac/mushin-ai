@@ -227,8 +227,14 @@ jobs:
           UPLOAD_URL="${{ steps.get_upload_url.outputs.UPLOAD_URL }}"
           echo "Upload URL: $UPLOAD_URL"
           
-          # Upload artifacts
-          find artifacts -type f | while read file; do
+          # Upload artifacts (only main installers)
+          find artifacts -type f \( \
+            -name "*.exe" -o \
+            -name "*.dmg" -o \
+            -name "*.AppImage" -o \
+            -name "*.deb" -o \
+            -name "*.rpm" \
+          \) | while read file; do
             filename=$(basename "$file")
             echo "Uploading $file as $filename"
             curl -s -X POST \
