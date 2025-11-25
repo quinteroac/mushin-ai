@@ -113,12 +113,11 @@ jobs:
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          name: Release ${{ steps.tag.outputs.TAG_NAME }}
-          files: |
+        run: |
+          gh release create "${{ steps.tag.outputs.TAG_NAME }}" \
+            --title "Release ${{ steps.tag.outputs.TAG_NAME }}" \
+            --notes "Automated release for ${{ steps.tag.outputs.TAG_NAME }}" \
             artifacts/**/*
-          draft: false
-          prerelease: false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
