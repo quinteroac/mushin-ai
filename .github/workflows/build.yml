@@ -119,6 +119,19 @@ jobs:
           echo "GitHub Ref: ${{ github.ref }}"
           echo "Tag Name: ${{ steps.tag.outputs.TAG_NAME }}"
           echo "GitHub Token (first 10 chars): ${GITHUB_TOKEN:0:10}..."
+          
+          # Get tag info to see who created it
+          TAG_INFO=$(git show ${{ steps.tag.outputs.TAG_NAME }} --format="%an|%ae|%H" -s 2>/dev/null || echo "Tag not found in local repo")
+          echo "Tag creator info: $TAG_INFO"
+          
+          # Check current user permissions
+          USER_INFO=$(curl -s \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/user")
+          echo "Current user: $(echo $USER_INFO | jq -r '.login')"
+          echo "User type: $(echo $USER_INFO | jq -r '.type')"
 
       - name: Check if release exists
         id: check_release
@@ -143,13 +156,33 @@ jobs:
         id: create_release
         if: steps.check_release.outputs.EXISTS == 'false'
         run: |
-          # Create release using GitHub API
+          # Try creating as draft first (sometimes this avoids author_id issues)
+          # If that fails, try without draft
           RELEASE_RESPONSE=$(curl -s -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ github.token }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/${{ github.repository }}/releases \
-            -d "{\"tag_name\":\"${{ steps.tag.outputs.TAG_NAME }}\",\"name\":\"Release ${{ steps.tag.outputs.TAG_NAME }}\",\"body\":\"Automated release for ${{ steps.tag.outputs.TAG_NAME }}\"}")
+            -d "{\"tag_name\":\"${{ steps.tag.outputs.TAG_NAME }}\",\"name\":\"Release ${{ steps.tag.outputs.TAG_NAME }}\",\"body\":\"Automated release for ${{ steps.tag.outputs.TAG_NAME }}\",\"draft\":false,\"prerelease\":false}")
+          
+          # Check for author_id error specifically
+          if echo "$RELEASE_RESPONSE" | jq -e '.errors[] | select(.field == "author_id")' > /dev/null 2>&1; then
+            echo "::error::Author ID permission error detected!"
+            echo ""
+            echo "This error occurs when GitHub tries to use the tag author for the release."
+            echo "To fix this, you need to configure repository permissions:"
+            echo ""
+            echo "1. Go to: https://github.com/${{ github.repository }}/settings/actions"
+            echo "2. Scroll to 'Workflow permissions'"
+            echo "3. Select 'Read and write permissions'"
+            echo "4. Click 'Save'"
+            echo ""
+            echo "Alternatively, ensure the tag was created by a user with push access."
+            echo ""
+            echo "Full error response:"
+            echo "$RELEASE_RESPONSE" | jq '.'
+            exit 1
+          fi
           
           echo "Release response: $RELEASE_RESPONSE"
           
