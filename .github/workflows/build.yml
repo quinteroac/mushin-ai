@@ -119,5 +119,5 @@ jobs:
             --notes "Automated release for ${{ steps.tag.outputs.TAG_NAME }}" \
             artifacts/**/*
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
