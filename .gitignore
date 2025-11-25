@@ -1,0 +1,204 @@
+# ============================================
+# Mushin AI - .gitignore
+# ============================================
+
+# ============================================
+# Archivos de Entorno y Configuración
+# ============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# ============================================
+# Node.js / Next.js
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ============================================
+# Rust / Tauri
+# ============================================
+# target/ está en app/src-tauri/.gitignore
+# pero lo incluimos aquí también por si acaso
+**/target/
+**/Cargo.lock
+*.pdb
+*.exe
+*.dll
+*.lib
+
+# Tauri build artifacts
+app/src-tauri/target/
+app/src-tauri/gen/
+
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Python packaging
+*.egg
+*.egg-info/
+dist/
+build/
+wheels/
+*.whl
+
+# uv
+.uv/
+uv.lock
+
+# ============================================
+# Bases de Datos
+# ============================================
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+memories.db
+*.db-journal
+
+# ============================================
+# Archivos del Sistema Operativo
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# IDEs y Editores
+# ============================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# Logs y Temporales
+# ============================================
+*.log
+logs/
+*.tmp
+*.temp
+*.cache
+.cache/
+
+# ============================================
+# Archivos de Build y Distribución
+# ============================================
+# Tauri bundle
+app/src-tauri/target/release/
+app/src-tauri/target/debug/
+
+# Instaladores
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.AppImage
+*.snap
+
+# ============================================
+# Archivos Específicos del Proyecto
+# ============================================
+# Instaladores de Rust
+rustup-init.exe
+rustup-init.sh
+
+# Archivos de configuración local
+config.local.json
+settings.local.json
+
+# ============================================
+# Testing y Coverage
+# ============================================
+coverage/
+.nyc_output/
+*.lcov
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ============================================
+# Misceláneos
+# ============================================
+*.pem
+*.key
+*.cert
+*.crt
+.DS_Store?
+.Spotlight-V100
+.Trashes
+

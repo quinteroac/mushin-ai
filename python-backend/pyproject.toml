@@ -1,0 +1,13 @@
+[project]
+name = "python-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.121.3",
+    "openai>=2.8.1",
+    "python-dotenv>=1.2.1",
+    "sqlite-vec>=0.1.6",
+    "uvicorn>=0.38.0",
+]
