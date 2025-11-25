@@ -60,7 +60,6 @@ No manual note management — just flow.
 
 ## 📚 Documentation
 
-- [Product Requirements (PRD.md)](PRD.md) — vision, features, and technical reasoning.
 - [Next.js Docs](https://nextjs.org/docs)
 - [Tauri Docs](https://tauri.app/v2/guides/)
 - [Shadcn/ui](https://ui.shadcn.com/)
