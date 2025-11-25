@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Trash2, ArrowLeft } from "lucide-react";
@@ -12,7 +12,7 @@ type Memory = {
   created_at: string;
 };
 
-export default function VaultPage() {
+function VaultContent() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
@@ -140,6 +140,20 @@ export default function VaultPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function VaultPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background p-8 font-[family-name:var(--font-geist-sans)]">
+        <div className="max-w-4xl mx-auto flex flex-col gap-8">
+          <div className="text-center py-20 text-muted-foreground">Loading vault...</div>
+        </div>
+      </div>
+    }>
+      <VaultContent />
+    </Suspense>
   );
 }
 
