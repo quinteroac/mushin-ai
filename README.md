@@ -19,6 +19,7 @@ Capture thoughts in a stream, retrieve them via contextual chat. No folders, no 
 To run the app locally:
 
 ```bash
+cd app
 npm install
 npm run dev
 ```
@@ -51,15 +52,15 @@ No manual note management — just flow.
 
 ## 🛠️ Development
 
-- Edit UI in `app/` (main page: `app/page.tsx`)
-- Python sidecar and DB logic are found under `/src-tauri` and `/python/`
+- Edit UI in `app/` (main page: `app/app/page.tsx`)
+- Python sidecar and DB logic are found under `python-backend/` and `app/src-tauri/`
 - Uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) for font optimization (Geist)
 
 ---
 
 ## 📚 Documentation
 
-- [Product Requirements (PRD.md)](../PRD.md) — vision, features, and technical reasoning.
+- [Product Requirements (PRD.md)](PRD.md) — vision, features, and technical reasoning.
 - [Next.js Docs](https://nextjs.org/docs)
 - [Tauri Docs](https://tauri.app/v2/guides/)
 - [Shadcn/ui](https://ui.shadcn.com/)
@@ -76,3 +77,4 @@ Web deployment possible, but disables local AI integration and loses privacy gua
 ## 🧩 Contributions
 
 PRs & discussions are welcome!
+
